@@ -14,10 +14,12 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Install Cross Compiler & Vulkan Dependencies
+      - name: Enable ARM64 Architecture & Install Dependencies
         run: |
+          sudo dpkg --add-architecture arm64
           sudo apt-get update
-          sudo apt-get install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu cmake build-essential libvulkan-dev glslang-tools
+          sudo apt-get install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu cmake build-essential glslang-tools
+          sudo apt-get install -y libvulkan-dev:arm64 libvulkan1:arm64
 
       - name: Configure CMake
         run: |
