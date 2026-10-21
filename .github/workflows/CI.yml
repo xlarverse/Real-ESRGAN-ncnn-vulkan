@@ -14,12 +14,12 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Install Cross Compiler
+      - name: Install Cross Compiler & Tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu cmake
+          sudo apt-get install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu cmake build-essential
 
-      - name: Build Binary
+      - name: Configure CMake
         run: |
           mkdir build && cd build
           cmake -DCMAKE_SYSTEM_NAME=Linux \
@@ -30,6 +30,10 @@ jobs:
                 -DNCNN_VULKAN=ON \
                 -DNCNN_BUILD_BENCHMARK=OFF \
                 ../src
+
+      - name: Compile with Make
+        run: |
+          cd build
           make -j$(nproc)
 
       - name: Upload Artifact
