@@ -14,10 +14,10 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Install Cross Compiler & Tools
+      - name: Install Cross Compiler & Vulkan Dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu cmake build-essential
+          sudo apt-get install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu cmake build-essential libvulkan-dev glslang-tools
 
       - name: Configure CMake
         run: |
