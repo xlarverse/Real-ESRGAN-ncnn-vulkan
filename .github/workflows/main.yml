@@ -1,0 +1,39 @@
+name: Build Termux ARM64 Binary
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-arm64:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Install ARM64 Cross Compiler & Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu cmake libvulkan-dev glslang-tools
+
+      - name: Configure and Build
+        run: |
+          mkdir build && cd build
+          cmake -DCMAKE_SYSTEM_NAME=Linux \
+                -DCMAKE_SYSTEM_PROCESSOR=aarch64 \
+                -DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc \
+                -DCMAKE_CXX_COMPILER=aarch64-linux-gnu-g++ \
+                -DCMAKE_BUILD_TYPE=Release \
+                -DNCNN_VULKAN=ON \
+                -DNCNN_BUILD_BENCHMARK=OFF \
+                ../src
+          make -j$(nproc)
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: realesrgan-ncnn-vulkan-termux-arm64
+          path: |
+            build/realesrgan-ncnn-vulkan
+            models/
